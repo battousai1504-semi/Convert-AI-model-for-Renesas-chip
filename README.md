@@ -1,3 +1,15 @@
+# Renesas / DEEPX AI conversion project
+
+Vietnamese license plate recognition workbench based on [PARSeq](https://github.com/baudm/parseq).
+
+**Start here:** [Windows + Ubuntu setup and commands](docs/SETUP_DUAL_BOOT.md) | [Scope and verified progress](docs/PROJECT_STATUS.md).
+
+Current additions: cropped single-line OCR to CSV on PC and encoder-only ONNX export with fidelity checks. Full-scene detection, two-line plate handling, video/tracking, DEEPX execution and Renesas integration are subsequent milestones.
+
+The original PARSeq documentation and attribution are preserved below.
+
+---
+
 ## News
 - **2024-02-22**: Updated for PyTorch 2.0 and Lightning 2.0
 - **2024-01-16**: Featured in the [NVIDIA Developer Blog](https://developer.nvidia.com/blog/robust-scene-text-detection-and-recognition-introduction/)

@@ -1,0 +1,14 @@
+{
+  "python.terminal.activateEnvironment": false,
+  "files.exclude": {
+    "**/.venv*": true,
+    "**/__pycache__": true,
+    "**/*.egg-info": true
+  },
+  "search.exclude": {
+    "**/.venv*": true,
+    "results/**": true,
+    "artifacts/**": true,
+    "datasets/**": true
+  }
+}
