@@ -21,10 +21,11 @@ Cập nhật: 2026-10-30 (Asia/Ho_Chi_Minh).
 | `ocr_batch.py` | Đã chạy trên máy Trực, xuất CSV CPU/GPU và summary; chỉ nhận crop một dòng |
 | `export_parseq_encoder.py` | Máy Trực báo PASS trên 2 file cùng cho chuỗi `AD799KB`; điều này không xác minh nhãn thật |
 | Đối chiếu encoder | Đã kiểm tra trên CPU Linux với PyTorch 2.2.1/timm 0.9.16 và 6 ảnh demo upstream: đặc trưng và output nhận dạng khớp trong ngưỡng kiểm tra |
-| Bootstrap hai OS | Linux CPU đã cài mới bằng `scripts/setup.sh cpu`, Python 3.10.22, `pip check` sạch; chạy batch thật thành công và encoder đối chiếu PASS 6/6. Windows bootstrap và Linux CUDA cần xác nhận trên máy đích |
-| Unit tests | 5 tests phụ trợ vượt qua trên môi trường Python 3.10 mới: nhãn/CSV, chỉ số, ảnh lỗi và kiểm tra báo cáo/sai số |
+| Bootstrap hai OS | Windows bootstrap CUDA đã được Trực xác nhận: 5/5 tests, demo Chevrol trên RTX 4050. Linux CPU đã cài mới bằng `scripts/setup.sh cpu`, Python 3.10.22, `pip check` sạch; batch thật và encoder đối chiếu PASS 6/6. Linux CUDA trên laptop chưa kiểm tra |
+| Unit tests | 10 tests vượt qua trên Python 3.10: các test baseline và kiểm tra nhãn/crop hai dòng, đổi tọa độ, hủy/lỗi ghi file, ảnh trùng/bị sửa, lấy khung hình video, ghép cả biển và nhãn lệch |
 | Accuracy biển VN | Chưa có kết quả nghiệm thu trên tập nhãn đại diện |
-| Detector / tách dòng / video | Chưa triển khai |
+| Detector / tách dòng / nhận dạng video tự động | Chưa triển khai |
+| Chuẩn bị dữ liệu VN | Thêm `annotate_plates.py`: chọn vùng và nhập nhãn bằng tay từ ảnh/video lấy mẫu, giữ nhóm nguồn và thứ tự hai dòng. `evaluate_plate_groups.py` đánh giá cả biển từ CSV OCR. Chưa chạy GUI trên máy Windows đích; chưa có số liệu biển VN thật |
 | DX-COM / `.dxnn` / card thật | Chưa xác minh với model của dự án |
 | Tích hợp Renesas | Chưa thực hiện |
 
@@ -38,3 +39,7 @@ Cập nhật: 2026-10-30 (Asia/Ho_Chi_Minh).
 6. Bổ sung video/tracking, CSV sự kiện và đo hiệu năng toàn luồng.
 
 Một file ONNX được tạo thành công không đồng nghĩa chuyển đổi đúng. `PASS` đối chiếu không đồng nghĩa OCR đúng nhãn; chạy trên PC không đồng nghĩa đã chạy trên NPU. Mỗi mốc phải có bằng chứng riêng.
+
+Luồng dữ liệu mới đã được thử trên ảnh chữ tổng hợp có nhãn biết trước với PARSeq
+CPU thật: cắt/lưu nhãn → OCR CSV → ghép cả biển. Video lấy mẫu đã thử với file
+MJPG tạo trong test. Đây là kiểm tra chức năng, không phải accuracy biển VN thực tế.

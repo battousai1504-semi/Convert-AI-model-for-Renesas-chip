@@ -6,6 +6,10 @@ Vietnamese license plate recognition workbench based on [PARSeq](https://github.
 
 Current additions: cropped single-line OCR to CSV on PC and encoder-only ONNX export with fidelity checks. Full-scene detection, two-line plate handling, video/tracking, DEEPX execution and Renesas integration are subsequent milestones.
 
+Vietnamese OCR data preparation: [Windows guide](docs/VN_OCR_WINDOWS.md).
+Manually select one/two plate lines from images or sampled video, enter verified
+labels, and evaluate whole-plate results. Automatic detection/splitting is pending.
+
 The original PARSeq documentation and attribution are preserved below.
 
 ---
