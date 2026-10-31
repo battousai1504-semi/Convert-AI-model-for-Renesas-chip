@@ -2,13 +2,13 @@
 
 Vietnamese license plate recognition workbench based on [PARSeq](https://github.com/baudm/parseq).
 
-**Start here:** [Windows + Ubuntu setup and commands](docs/SETUP_DUAL_BOOT.md) | [Scope and verified progress](docs/PROJECT_STATUS.md).
+**Start here:** [Windows + Ubuntu setup](docs/SETUP_DUAL_BOOT.md) | [Automatic image/video ALPR](docs/ALPR_AUTO_WINDOWS.md) | [Ubuntu DX-M1 preparation](docs/DEEPX_UBUNTU_PREP.md) | [Progress and limitations](docs/PROJECT_STATUS.md).
 
-Current additions: cropped single-line OCR to CSV on PC and encoder-only ONNX export with fidelity checks. Full-scene detection, two-line plate handling, video/tracking, DEEPX execution and Renesas integration are subsequent milestones.
+Current additions: automatic plate detection, one/two-line OCR and video event aggregation to CSV on PC, plus cropped-image OCR and encoder-only ONNX export with fidelity checks. The automatic pipeline has been exercised on Windows; representative accuracy and end-to-end performance remain to be measured.
 
-Vietnamese OCR data preparation: [Windows guide](docs/VN_OCR_WINDOWS.md).
-Manually select one/two plate lines from images or sampled video, enter verified
-labels, and evaluate whole-plate results. Automatic detection/splitting is pending.
+DEEPX preparation on Ubuntu: DX-COM 2.4.1 and DX-RT 3.4.2 installed; driver modules built and signed for kernel 7.0.0-38-generic. **DX-M1 enumeration, driver loading and NPU inference are not yet verified.** The ALPR application currently uses ONNX Runtime CPU for detection and PyTorch CPU/CUDA for OCR; it has no DX-RT backend yet.
+
+Optional ground-truth data preparation: [Windows guide](docs/VN_OCR_WINDOWS.md). Manual annotation is for evaluation/training data; automatic ALPR inference does not require drawing boxes or entering plate text.
 
 The original PARSeq documentation and attribution are preserved below.
 

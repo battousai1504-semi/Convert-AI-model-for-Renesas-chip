@@ -1,45 +1,51 @@
 # Phạm vi và tiến độ
 
-Cập nhật: 2026-10-30 (Asia/Ho_Chi_Minh).
+Cập nhật: 2026-10-31 (Asia/Ho_Chi_Minh).
 
-## Mục tiêu đã thống nhất trong nhóm làm việc
+Trang này tổng hợp mã trên nhánh `truc/parseq-cross-platform` và log Trực cung cấp. Các kết quả trên laptop không phải lần chạy lại trong CI.
 
-- Ưu tiên biển số Việt Nam: ảnh crop, ảnh toàn cảnh, rồi video toàn cảnh.
-- Cần xử lý biển một dòng và hai dòng ở giai đoạn ứng dụng đầy đủ.
-- Đầu ra ban đầu là CSV; giữ thiết kế để có thể bổ sung giao diện khác.
-- Model nhận dạng ban đầu là PARSeq pretrained. Bổ sung detector để tìm biển trong toàn cảnh.
-- Video cần tracking/tổng hợp nhiều lần đọc và hạn chế dòng CSV trùng theo lượt xuất hiện.
-- Phần cứng thử trước là card DEEPX M.2, rồi tích hợp Renesas theo kiến trúc công ty xác nhận.
-- Nhận diện quốc gia/mở rộng quốc tế là hướng sau, không thuộc baseline đang có.
-- Độ chính xác/tốc độ cần được đo trên dữ liệu đại diện; chưa có ngưỡng nghiệm thu được công ty xác nhận.
+## Mục tiêu
 
-## Những gì hiện có
+- Ưu tiên biển Việt Nam, một dòng và hai dòng.
+- Nhận ảnh crop, ảnh toàn cảnh và video toàn cảnh; tự tìm biển và đọc chữ.
+- Đầu ra ban đầu là CSV; video tổng hợp nhiều lần đọc theo lượt xuất hiện.
+- Chạy thử trên DEEPX DX-M1 M.2, sau đó tích hợp Renesas theo kiến trúc công ty xác nhận.
+- Mở rộng quốc tế/nhận diện quốc gia ở giai đoạn sau.
+- Chưa có ngưỡng nghiệm thu accuracy hoặc tốc độ được công ty xác nhận.
 
-| Thành phần | Trạng thái và giới hạn |
-| --- | --- |
-| PARSeq gốc | Đã chạy CPU và RTX 4050 trên Windows trong môi trường Python 3.10 của Trực |
-| `ocr_batch.py` | Đã chạy trên máy Trực, xuất CSV CPU/GPU và summary; chỉ nhận crop một dòng |
-| `export_parseq_encoder.py` | Máy Trực báo PASS trên 2 file cùng cho chuỗi `AD799KB`; điều này không xác minh nhãn thật |
-| Đối chiếu encoder | Đã kiểm tra trên CPU Linux với PyTorch 2.2.1/timm 0.9.16 và 6 ảnh demo upstream: đặc trưng và output nhận dạng khớp trong ngưỡng kiểm tra |
-| Bootstrap hai OS | Windows bootstrap CUDA đã được Trực xác nhận: 5/5 tests, demo Chevrol trên RTX 4050. Linux CPU đã cài mới bằng `scripts/setup.sh cpu`, Python 3.10.22, `pip check` sạch; batch thật và encoder đối chiếu PASS 6/6. Linux CUDA trên laptop chưa kiểm tra |
-| Unit tests | 10 tests vượt qua trên Python 3.10: các test baseline và kiểm tra nhãn/crop hai dòng, đổi tọa độ, hủy/lỗi ghi file, ảnh trùng/bị sửa, lấy khung hình video, ghép cả biển và nhãn lệch |
-| Accuracy biển VN | Chưa có kết quả nghiệm thu trên tập nhãn đại diện |
-| Detector / tách dòng / nhận dạng video tự động | Chưa triển khai |
-| Chuẩn bị dữ liệu VN | Thêm `annotate_plates.py`: chọn vùng và nhập nhãn bằng tay từ ảnh/video lấy mẫu, giữ nhóm nguồn và thứ tự hai dòng. `evaluate_plate_groups.py` đánh giá cả biển từ CSV OCR. Chưa chạy GUI trên máy Windows đích; chưa có số liệu biển VN thật |
-| DX-COM / `.dxnn` / card thật | Chưa xác minh với model của dự án |
-| Tích hợp Renesas | Chưa thực hiện |
+## Thành phần và bằng chứng
 
-## Thứ tự tiếp theo
+| Thành phần | Kết quả hiện có | Giới hạn |
+| --- | --- | --- |
+| PARSeq trên Windows | CPU và RTX 4050 CUDA chạy được | Chạy được không chứng minh OCR đúng |
+| PARSeq trên Ubuntu | Python 3.10, CPU; demo `coco-1166773.jpg` trả `Chevrol` | Chưa có xác nhận chạy CUDA trên Ubuntu laptop |
+| `ocr_batch.py` | CSV CPU/CUDA và báo cáo so sánh | Đầu vào là crop một dòng |
+| Encoder ONNX | Trên laptop Ubuntu, PASS 6/6 ảnh demo so với PyTorch; input FP32 `[1,3,32,128]`, opset 17 | Chỉ encoder; decoder vẫn PyTorch. Đây là độ khớp chuyển đổi, không phải accuracy |
+| `alpr_auto.py` | Tự detect, xử lý một/hai dòng, OCR, tổng hợp track và xuất CSV | Detector ONNX Runtime CPU; OCR PyTorch CPU/CUDA; chưa có backend DX-RT |
+| Ảnh toàn cảnh VN trên Windows | 6 ảnh, 14 detections, 14 events | Chưa đối chiếu toàn bộ với nhãn chuẩn |
+| Video trên Windows | `test_1.mp4`: 30 khung được xử lý, 47 detections, 10 events | Không suy ra 10 xe duy nhất, accuracy hoặc FPS toàn luồng |
+| Dữ liệu/đánh giá | `annotate_plates.py`, `evaluate_plate_groups.py` | Khoanh vùng/nhập nhãn chỉ phục vụ tạo ground truth; không bắt buộc khi dùng ALPR tự động |
+| Unit tests | Trực đã gửi log 5/5 baseline tests OK trên Windows | Không ghi nhận tổng số tests khác hay kết quả Linux khi chưa có log mới |
+| DX-COM | 2.4.1, CLI báo target M1 | Chưa compile encoder PARSeq thành `.dxnn` |
+| DX-RT | 3.4.2, `dxrt-cli -h` hoạt động, `import dx_engine` OK, `pip check` sạch | Chưa gọi inference trên card |
+| Driver trên Ubuntu | Build và cài `dx_dma` + `dxrt_driver`; signer là MOK đã enroll; vermagic `7.0.0-38-generic` | Chưa xác minh nạp module, PCIe hoặc giao tiếp phần cứng |
+| Model mẫu | MobileNetV2 `.dxnn` đã tải từ DEEPX, khoảng 7.4 MiB | Chưa chạy trên DX-M1 |
+| Renesas | Chưa tích hợp | Cần xác nhận kiến trúc đích |
 
-1. Chạy lại baseline/demo từ repo nhóm trên Windows và Ubuntu; ghi phiên bản cùng log.
-2. Xác nhận card, phiên bản DEEPX compiler/runtime/firmware ở lab; chạy model mẫu của hãng.
-3. Thử compiler với encoder ONNX để phát hiện phép toán chưa hỗ trợ và đánh giá lượng tử hóa bằng dữ liệu hiệu chuẩn phù hợp. Dữ liệu hiệu chuẩn và bộ đánh giá độc lập.
-4. Quyết định cách triển khai decoder dựa trên kết quả compiler và số liệu thực tế; hiện vẫn là PyTorch, chưa chốt encoder-only làm kiến trúc sản phẩm.
-5. Bổ sung detector biển VN, xử lý bố cục hai dòng và đánh giá ảnh toàn cảnh.
-6. Bổ sung video/tracking, CSV sự kiện và đo hiệu năng toàn luồng.
+Log export trên laptop Ubuntu: `artifacts/encoder_20261031_225454_044655`.
+Các output mẫu: CHEWBACCA, Chevrol, SALMON, Verbandsteffe, Kappa, 3rdAve.
+Giữ nguyên output gốc trong báo cáo; không dùng chúng làm ground truth.
 
-Một file ONNX được tạo thành công không đồng nghĩa chuyển đổi đúng. `PASS` đối chiếu không đồng nghĩa OCR đúng nhãn; chạy trên PC không đồng nghĩa đã chạy trên NPU. Mỗi mốc phải có bằng chứng riêng.
+## Mốc tiếp theo
 
-Luồng dữ liệu mới đã được thử trên ảnh chữ tổng hợp có nhãn biết trước với PARSeq
-CPU thật: cắt/lưu nhãn → OCR CSV → ghép cả biển. Video lấy mẫu đã thử với file
-MJPG tạo trong test. Đây là kiểm tra chức năng, không phải accuracy biển VN thực tế.
+1. Gắn DX-M1, xác nhận PCIe, nạp driver có chữ ký và đọc trạng thái runtime.
+2. Chạy model mẫu hãng để kiểm tra inference phần cứng.
+3. Thử compile encoder PARSeq bằng DX-COM; lưu log phép toán, cấu hình và phiên bản.
+4. Chuẩn bị dữ liệu calibration đại diện, tách biệt bộ đánh giá; đo sai lệch sau lượng tử hóa.
+5. Tích hợp DX-RT vào ALPR theo kết quả compiler; đánh giá cả detector và encoder. Decoder hiện vẫn PyTorch.
+6. Đo accuracy cả biển và hiệu năng toàn luồng trên dữ liệu VN có nhãn; đánh giá lỗi tracking, biển nghiêng/mờ, hai dòng.
+7. Tích hợp Renesas sau khi thống nhất phần cứng và giao diện.
+
+Hướng dẫn: [hai OS](SETUP_DUAL_BOOT.md), [ALPR tự động](ALPR_AUTO_WINDOWS.md), [chuẩn bị DX-M1 trên Ubuntu](DEEPX_UBUNTU_PREP.md).
+
+ONNX hợp lệ không đồng nghĩa compiler hỗ trợ. PASS đối chiếu không đồng nghĩa OCR đúng. Driver build/cài được không đồng nghĩa đã nạp được hoặc đã chạy trên NPU.

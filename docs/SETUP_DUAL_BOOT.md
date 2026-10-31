@@ -94,6 +94,8 @@ Với máy chỉ có CPU, dùng `--device cpu` cho batch và bỏ lệnh CUDA.
 
 ## 5. Chạy ảnh biển số của nhóm
 
+Với ảnh/video toàn cảnh và nhận diện tự động, dùng [hướng dẫn ALPR tự động](ALPR_AUTO_WINDOWS.md) cùng `alpr_auto.py`. Phần bên dưới mô tả riêng baseline crop một dòng dùng `ocr_batch.py`.
+
 ```text
 inputs/
   plate_01.png
@@ -144,6 +146,8 @@ git pull --ff-only
 Nếu có thay đổi chưa commit hoặc nhánh đã phân kỳ, xử lý chúng trước khi pull; không dùng reset/force để bỏ qua. Sau khi requirements thay đổi, chạy lại script setup của OS đó. Dữ liệu/model bị ignore không được Git tự đồng bộ.
 
 ## 8. Chuyển sang DEEPX
+
+Xem [chuẩn bị DX-M1 trên Ubuntu và trạng thái kiểm tra thực tế](DEEPX_UBUNTU_PREP.md). Các môi trường compiler/runtime ở ngoài repo ALPR; chúng không được đồng bộ bằng Git của dự án.
 
 DX-COM là môi trường compiler riêng trên Linux x86_64; phải chọn phiên bản phù hợp runtime/firmware của card lab. DX-RT có tài liệu cho Windows và Linux, nhưng cần cài driver/runtime riêng và kiểm thử từng tổ hợp thực tế. Khả năng dùng chung `.dxnn` phụ thuộc tương thích SDK/runtime, không được suy ra chỉ từ việc dùng chung code Python.
 
