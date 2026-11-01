@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "name": "vn_starter_v1",
+  "scope": "Five public development examples; NOT a representative or certified held-out test set.",
+  "source_repository": "https://github.com/phthanhtung/alpr-vietnam-system/tree/3455c86eb2903072133860ad40419dcb4727b92c/data/sample",
+  "label_policy": "No OCR predictions used to choose labels; second visual review recommended before acceptance metrics.",
+  "split_note": "New to this measured workflow, but unknown overlap with pretrained models. All are from a similar parking scene; grouped conservatively together.",
+  "images": [
+    {
+      "id": "vn_dev_01",
+      "file": "vn_dev_01.jpg",
+      "url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/images/BienSoXe-20-_jpg.rf.5ea0fd8c424168c8364ffa85f4c525b2.jpg",
+      "sha256": "14997f3286bca44820cdc30e366ab1fc73ba098f7b5293186cd6333e5471d9f1",
+      "width": 640,
+      "height": 640,
+      "split": "development",
+      "group_id": "public_parking_session_unknown",
+      "annotation_provenance": {
+        "box": "upstream YOLO label",
+        "box_label_url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/labels/BienSoXe-20-_jpg.rf.5ea0fd8c424168c8364ffa85f4c525b2.txt",
+        "box_label_sha256": "d1704f4c59f6bc31ae93941359f47d64573387fb76ab277b2284c5d380c31a07",
+        "text": "visually transcribed from the image by assistant; review sheet supplied"
+      },
+      "annotations": [
+        {
+          "id": "plate1",
+          "box_xyxy": [
+            260.0,
+            271.5,
+            392.0,
+            370.50000000000006
+          ],
+          "text": "59D208525",
+          "layout": "two"
+        }
+      ]
+    },
+    {
+      "id": "vn_dev_02",
+      "file": "vn_dev_02.jpg",
+      "url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/images/BienSoXe-24-_jpg.rf.bd68df5a62c6efacba7e928c792debb7.jpg",
+      "sha256": "38b9592f7e23e17b5fb8337f505ce260951c880efe35995f810a5afe291d9d90",
+      "width": 640,
+      "height": 640,
+      "split": "development",
+      "group_id": "public_parking_session_unknown",
+      "annotation_provenance": {
+        "box": "upstream YOLO label",
+        "box_label_url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/labels/BienSoXe-24-_jpg.rf.bd68df5a62c6efacba7e928c792debb7.txt",
+        "box_label_sha256": "1c7ac2b808c38ea8d6c54c23751b8c716aea441ae31933869d0317d1ec9b22b1",
+        "text": "visually transcribed from the image by assistant; review sheet supplied"
+      },
+      "annotations": [
+        {
+          "id": "plate1",
+          "box_xyxy": [
+            216.0,
+            240.5,
+            378.0,
+            359.5
+          ],
+          "text": "37B296286",
+          "layout": "two"
+        }
+      ]
+    },
+    {
+      "id": "vn_dev_03",
+      "file": "vn_dev_03.jpg",
+      "url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/images/BienSoXe-29-_jpg.rf.35b92896f83203ac79a5a4065091360c.jpg",
+      "sha256": "215a638ee744c2710f907cc33d2d3a5f8c59698c5af83c92266a316d9e997efb",
+      "width": 640,
+      "height": 640,
+      "split": "development",
+      "group_id": "public_parking_session_unknown",
+      "annotation_provenance": {
+        "box": "upstream YOLO label",
+        "box_label_url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/labels/BienSoXe-29-_jpg.rf.35b92896f83203ac79a5a4065091360c.txt",
+        "box_label_sha256": "a253fb85b9734fdd58226aed45f639ad671e399994b68184ec8df5fd742f8cc5",
+        "text": "visually transcribed from the image by assistant; review sheet supplied"
+      },
+      "annotations": [
+        {
+          "id": "plate1",
+          "box_xyxy": [
+            235.0,
+            328.00000000000006,
+            391.0,
+            434.0
+          ],
+          "text": "59E166764",
+          "layout": "two"
+        }
+      ]
+    },
+    {
+      "id": "vn_dev_04",
+      "file": "vn_dev_04.jpg",
+      "url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/images/BienSoXe-4-_jpg.rf.04e0f29e3736fbbf7be82cf3fba0353f.jpg",
+      "sha256": "cf9dd01f4eb7a77243396e224c76333ce2b1ee3cffea393f8ed9f8fe21201062",
+      "width": 640,
+      "height": 640,
+      "split": "development",
+      "group_id": "public_parking_session_unknown",
+      "annotation_provenance": {
+        "box": "upstream YOLO label",
+        "box_label_url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/labels/BienSoXe-4-_jpg.rf.04e0f29e3736fbbf7be82cf3fba0353f.txt",
+        "box_label_sha256": "b2ec0c895b26e22ea10b11f27354743454ebb1c030777fc6ce65f8ef1e3b716c",
+        "text": "visually transcribed from the image by assistant; review sheet supplied"
+      },
+      "annotations": [
+        {
+          "id": "plate1",
+          "box_xyxy": [
+            210.0,
+            264.99999999999994,
+            374.0,
+            390.99999999999994
+          ],
+          "text": "54V29672",
+          "layout": "two"
+        }
+      ]
+    },
+    {
+      "id": "vn_dev_05",
+      "file": "vn_dev_05.jpg",
+      "url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/images/BienSoXe-5-_jpg.rf.559b8d773ac3ee171ac1e543be9194f3.jpg",
+      "sha256": "ee0ea7bebb5c9b9fea65f45565f5251b5b176f568c08797058b818d3f65bd743",
+      "width": 640,
+      "height": 640,
+      "split": "development",
+      "group_id": "public_parking_session_unknown",
+      "annotation_provenance": {
+        "box": "upstream YOLO label",
+        "box_label_url": "https://raw.githubusercontent.com/phthanhtung/alpr-vietnam-system/3455c86eb2903072133860ad40419dcb4727b92c/data/sample/labels/BienSoXe-5-_jpg.rf.559b8d773ac3ee171ac1e543be9194f3.txt",
+        "box_label_sha256": "b454d467bfbb5a7bced4bbbe615f991ff99c47764e8cfe71084d0e6524f0ee7b",
+        "text": "visually transcribed from the image by assistant; review sheet supplied"
+      },
+      "annotations": [
+        {
+          "id": "plate1",
+          "box_xyxy": [
+            224.5,
+            286.5,
+            385.5,
+            407.5
+          ],
+          "text": "54R23076",
+          "layout": "two"
+        }
+      ]
+    }
+  ]
+}
