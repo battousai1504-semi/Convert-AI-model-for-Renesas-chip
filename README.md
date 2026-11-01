@@ -10,6 +10,8 @@ DX-M1 hardware is now verified on Ubuntu: PCIe Gen3 x4, signed drivers, DX-RT 3.
 
 Optional ground-truth data preparation: [Windows guide](docs/VN_OCR_WINDOWS.md). Manual annotation is for evaluation/training data; automatic ALPR inference does not require drawing boxes or entering plate text.
 
+**Team learning:** [Vietnamese knowledge base and debugging labs](knowledge/README.md) · [8-stage roadmap](knowledge/ROADMAP.md).
+
 The original PARSeq documentation and attribution are preserved below.
 
 ---
