@@ -146,3 +146,28 @@ cython_debug/
 
 # IDE
 .idea/
+
+# Team workbench: each OS has its own Python environment.
+.venv*/
+.env.*
+!.env.example
+
+# Local inputs, exported models, generated CSV/logs, SDKs and caches.
+/inputs/
+/data/
+/datasets/
+/results/
+/artifacts/
+/sdk/
+/third_party_sdk/
+/requirements-pc-lock*.txt
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.dxnn
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.qxnn

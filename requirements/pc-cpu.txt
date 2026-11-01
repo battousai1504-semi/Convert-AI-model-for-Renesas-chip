@@ -1,0 +1,4 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+-r pc-common.txt
+torch==2.2.1+cpu
+torchvision==0.17.1+cpu

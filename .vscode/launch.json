@@ -1,0 +1,49 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "PARSeq: demo on CPU",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/read.py",
+      "args": ["pretrained=parseq", "--images", "demo_images/coco-1166773.jpg", "--device", "cpu"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "windows": {"python": "${workspaceFolder}/.venv-win/Scripts/python.exe"},
+      "linux": {"python": "${workspaceFolder}/.venv-linux/bin/python"}
+    },
+    {
+      "name": "PARSeq: demo on NVIDIA GPU",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/read.py",
+      "args": ["pretrained=parseq", "--images", "demo_images/coco-1166773.jpg", "--device", "cuda"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "windows": {"python": "${workspaceFolder}/.venv-win/Scripts/python.exe"},
+      "linux": {"python": "${workspaceFolder}/.venv-linux/bin/python"}
+    },
+    {
+      "name": "CSV baseline: CPU vs GPU",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/ocr_batch.py",
+      "args": ["--input", "demo_images", "--device", "both"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "windows": {"python": "${workspaceFolder}/.venv-win/Scripts/python.exe"},
+      "linux": {"python": "${workspaceFolder}/.venv-linux/bin/python"}
+    },
+    {
+      "name": "ONNX: export and validate encoder",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/export_parseq_encoder.py",
+      "args": ["--input", "demo_images"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "windows": {"python": "${workspaceFolder}/.venv-win/Scripts/python.exe"},
+      "linux": {"python": "${workspaceFolder}/.venv-linux/bin/python"}
+    }
+  ]
+}

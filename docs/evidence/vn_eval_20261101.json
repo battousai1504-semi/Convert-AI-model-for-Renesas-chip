@@ -1,0 +1,152 @@
+{
+  "created_utc": "2026-11-01T10:19:19.636431+00:00",
+  "dataset_name": "vn_starter_v1",
+  "dataset_sha256": "668cab74a34d41decf7090df51ada4721ef2346bc43c196c5f499fb8f5c06a1b",
+  "evaluation_script_sha256": "6043b15e387b83cb8a5d5ae695d8d6d67b4cae12b9c1e88fef6d3e9ff8a2fc61",
+  "dataset_scope": "Five public development examples; NOT a representative or certified held-out test set.",
+  "label_policy": "No OCR predictions used to choose labels; second visual review recommended before acceptance metrics.",
+  "iou_threshold": 0.5,
+  "metric_policy": "Geometry-only maximum-cardinality matching at IoU threshold. ASCII uppercase alphanumerics; no lookalike correction. Failed OCR treated as empty text. No mAP or event/tracking metric.",
+  "dxnn_sha256": "3e28c6eecc7f3bfc26f9864911523121d295a1742b56c75df53deae8a06e2ea3",
+  "backends": {
+    "cpu": {
+      "overall": {
+        "images": 5,
+        "source_groups": 1,
+        "ground_truth_plates": 5,
+        "predicted_boxes": 5,
+        "detection_tp": 5,
+        "detection_fp": 0,
+        "detection_fn": 0,
+        "detection_precision": 1.0,
+        "detection_recall": 1.0,
+        "exact_plates": 5,
+        "end_to_end_exact_recall": 1.0,
+        "end_to_end_exact_precision": 1.0,
+        "ocr_exact_on_matched_boxes": 1.0,
+        "ocr_cer_on_matched_boxes": 0.0,
+        "gt_cer_including_missed_plates": 0.0,
+        "error_counts": {
+          "correct": 5
+        }
+      },
+      "by_split": {
+        "development": {
+          "images": 5,
+          "source_groups": 1,
+          "ground_truth_plates": 5,
+          "predicted_boxes": 5,
+          "detection_tp": 5,
+          "detection_fp": 0,
+          "detection_fn": 0,
+          "detection_precision": 1.0,
+          "detection_recall": 1.0,
+          "exact_plates": 5,
+          "end_to_end_exact_recall": 1.0,
+          "end_to_end_exact_precision": 1.0,
+          "ocr_exact_on_matched_boxes": 1.0,
+          "ocr_cer_on_matched_boxes": 0.0,
+          "gt_cer_including_missed_plates": 0.0,
+          "error_counts": {
+            "correct": 5
+          }
+        }
+      },
+      "gt_by_layout": {
+        "one": {
+          "plates": 0,
+          "correct": 0
+        },
+        "two": {
+          "plates": 5,
+          "correct": 5
+        }
+      },
+      "frame_errors": 0,
+      "frame_compute_ms": {
+        "n": 5,
+        "mean": 108.02279999999999,
+        "p50_nearest_rank": 105.523,
+        "p95_nearest_rank": 117.737,
+        "note": "Existing per-frame compute only; excludes decode/I/O/load/warmup. Not end-to-end FPS."
+      },
+      "source_report_sha256": {
+        "summary.json": "50b04f376481384334c2e9a55692271a5a0e0912632392e8ab152737c790ebb7",
+        "frames.csv": "cb5d976cff7fb43a823b9507baba247d8d090de7e1302bc74d0322e5b57c6b8f",
+        "detections.csv": "baf1c34d2bd2acf9828cfcb5a833aefdc4c4b65049809c8cbbc7a78ed77df6e9"
+      }
+    },
+    "dxm1": {
+      "overall": {
+        "images": 5,
+        "source_groups": 1,
+        "ground_truth_plates": 5,
+        "predicted_boxes": 5,
+        "detection_tp": 5,
+        "detection_fp": 0,
+        "detection_fn": 0,
+        "detection_precision": 1.0,
+        "detection_recall": 1.0,
+        "exact_plates": 5,
+        "end_to_end_exact_recall": 1.0,
+        "end_to_end_exact_precision": 1.0,
+        "ocr_exact_on_matched_boxes": 1.0,
+        "ocr_cer_on_matched_boxes": 0.0,
+        "gt_cer_including_missed_plates": 0.0,
+        "error_counts": {
+          "correct": 5
+        }
+      },
+      "by_split": {
+        "development": {
+          "images": 5,
+          "source_groups": 1,
+          "ground_truth_plates": 5,
+          "predicted_boxes": 5,
+          "detection_tp": 5,
+          "detection_fp": 0,
+          "detection_fn": 0,
+          "detection_precision": 1.0,
+          "detection_recall": 1.0,
+          "exact_plates": 5,
+          "end_to_end_exact_recall": 1.0,
+          "end_to_end_exact_precision": 1.0,
+          "ocr_exact_on_matched_boxes": 1.0,
+          "ocr_cer_on_matched_boxes": 0.0,
+          "gt_cer_including_missed_plates": 0.0,
+          "error_counts": {
+            "correct": 5
+          }
+        }
+      },
+      "gt_by_layout": {
+        "one": {
+          "plates": 0,
+          "correct": 0
+        },
+        "two": {
+          "plates": 5,
+          "correct": 5
+        }
+      },
+      "frame_errors": 0,
+      "frame_compute_ms": {
+        "n": 5,
+        "mean": 75.96579999999999,
+        "p50_nearest_rank": 73.261,
+        "p95_nearest_rank": 83.928,
+        "note": "Existing per-frame compute only; excludes decode/I/O/load/warmup. Not end-to-end FPS."
+      },
+      "source_report_sha256": {
+        "summary.json": "9d5c2c90ced73b12d218da24c798f82d1f66b9e497a09a36bbacc4464e0834c0",
+        "frames.csv": "d551838b2ec2e7c43f7d8c9120d01a610e51e5259242e3af1a6bb27024d362c1",
+        "detections.csv": "3b93e2590716ff9f9e2fed95fa0ffd9dc56edbe459b36b0a1425f11f69b7bbd2"
+      }
+    }
+  },
+  "conversion_comparison": {
+    "paired_geometric_matches": 5,
+    "same_nonempty_successful_text": 5,
+    "note": "Agreement is not ground-truth accuracy; missing/error predictions never count as agreement."
+  }
+}

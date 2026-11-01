@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "collected_utc": "2026-11-01T09:58:36.905467+00:00",
+  "scope": "Cross-checked small smoke checkpoint, not a representative accuracy or speed benchmark",
+  "dxnn_sha256": "3e28c6eecc7f3bfc26f9864911523121d295a1742b56c75df53deae8a06e2ea3",
+  "original_encoder_sha256": "db87f92314dd70db4fc0f2c0f3a15692fe5f978f6ccb6c32f3165af0cb0aadf4",
+  "placement": {
+    "projection_nodes": [
+      "__onekiwi_mm_v1__project"
+    ],
+    "partitions": {
+      "npu_0": "NPU"
+    }
+  },
+  "architecture": {
+    "detector": "ORT CPU",
+    "preprocessing": "CPU",
+    "encoder": "DX-M1",
+    "decoder": "PyTorch CPU",
+    "tracking_csv": "CPU"
+  },
+  "full_ocr": {
+    "images": 6,
+    "text_matches": 6,
+    "errors": 0,
+    "all_texts_match": true
+  },
+  "ocr_runtime_versions": {
+    "torch": "2.2.1+cpu",
+    "numpy": "1.26.4",
+    "onnxruntime": "1.18.1",
+    "dx_engine": "3.4.2"
+  },
+  "observations": {
+    "photo": {
+      "processed_frames": 1,
+      "detections_each_backend": 1,
+      "events_each_backend": 1,
+      "text_counts_each_backend": {
+        "30A33918": 1
+      },
+      "box_and_text_agreement": true,
+      "dxm1_ocr_errors": 0,
+      "successful_encoder_calls_including_warmup": 2,
+      "sampling": "one full-scene image"
+    },
+    "video": {
+      "processed_frames": 30,
+      "detections_each_backend": 30,
+      "events_each_backend": 1,
+      "text_counts_each_backend": {
+        "59V184625": 30
+      },
+      "box_and_text_agreement": true,
+      "dxm1_ocr_errors": 0,
+      "successful_encoder_calls_including_warmup": 61,
+      "sampling": "sampled video frames, not independent plates"
+    }
+  },
+  "source_report_sha256": {
+    "artifacts/dxm1_full_encoder_mm_20261101_134233_21170/matmul_contract.json": "8cb4e8938a368e0ecec884c6e5f414287f6592163a0047429a156836e745aa6a",
+    "results/dxm1_full_ocr_20261101_134253_446327/summary.json": "4ce0e7d2e02e17a2d333babd83bf49bd677b8fb6da44ab783c6226111c885411",
+    "results/dxm1_full_ocr_20261101_134253_446327/comparison.csv": "785837daec9c5ce9121fff37e671979124673014bbc714c1443e7142d4b97d58",
+    "results/vn_dxm1_smoke_20261101_135749_21703/cpu/summary.json": "5969f62d26582cab33284eea143ef43d8505b4b3ab75cd37523895de17cc9616",
+    "results/vn_dxm1_smoke_20261101_135749_21703/cpu/detections.csv": "d74f6c91fc7deafb89fe0190490eb0eb4413ede3751f8389dd67286e74c53869",
+    "results/vn_dxm1_smoke_20261101_135749_21703/cpu/events.csv": "21d432f24e7d02be28b233516b80eb7d6e61aa34d9d1df704ac934858d70628f",
+    "results/vn_dxm1_smoke_20261101_135749_21703/cpu/frames.csv": "49ddcc60cde49d9a6d1953d1f54580477acd26ddfce422f313ba69f4dcfe05d3",
+    "results/vn_dxm1_smoke_20261101_135749_21703/dxm1/summary.json": "8173de1b5427526a24519263c6c3179e9eeb20c7ac7badd68629bfffb7fb54f3",
+    "results/vn_dxm1_smoke_20261101_135749_21703/dxm1/detections.csv": "d171f6a7313e44c380ca7db8c58ea20fce4be976c627197cd64d62341fc89c00",
+    "results/vn_dxm1_smoke_20261101_135749_21703/dxm1/events.csv": "99da4e7ed654b3282fda5de193d3f69989f03fa16b5814bb9c00bf057389c154",
+    "results/vn_dxm1_smoke_20261101_135749_21703/dxm1/frames.csv": "36c3501debaa44687f11f879df7d2ce88d6e6ada6249f0ea4e32a37873c8d618",
+    "results/vn_dxm1_smoke_20261101_135749_21703/smoke_comparison.json": "8c964891b923d9b213c72ee130e445d690a0f891430d388cdcbfeffdfaba970c",
+    "results/vn_dxm1_smoke_20261101_140152_21831/cpu/summary.json": "9d9eec05d9f877ca139a04a6eee7cd8a68552fa2da40248762d7cf8190d2c4f6",
+    "results/vn_dxm1_smoke_20261101_140152_21831/cpu/detections.csv": "335b70bbcda43000617694cea886f5945a49375ca50a1074d4c685acfc35763f",
+    "results/vn_dxm1_smoke_20261101_140152_21831/cpu/events.csv": "1aa48f616702d022c07de8230077b29387893e9a95f75cc71e6cb2063cf2b16e",
+    "results/vn_dxm1_smoke_20261101_140152_21831/cpu/frames.csv": "3bd2b16f25ccf77883ea6966cda8117e1e573cd36544596ab4326f9cd6a6acbd",
+    "results/vn_dxm1_smoke_20261101_140152_21831/dxm1/summary.json": "af7e7d523759db2c2185a71751f9af3e14eba5760ac88c576b85fefb5a5468b9",
+    "results/vn_dxm1_smoke_20261101_140152_21831/dxm1/detections.csv": "685f90af1cb9adb030bc3de62657934e650326ddbb4a16d7a6803e71d6c8b1fa",
+    "results/vn_dxm1_smoke_20261101_140152_21831/dxm1/events.csv": "32eff50c076accc1e885bc082bc3851a628b9a4f65e23d8bbc6dc63faddd46a2",
+    "results/vn_dxm1_smoke_20261101_140152_21831/dxm1/frames.csv": "be8ede011451189038b91d5e6b4a0cbc2334f84dc6e0346274317825c9088d66",
+    "results/vn_dxm1_smoke_20261101_140152_21831/smoke_comparison.json": "c4ee510134eb29697854c7fd31370f694a737f8f0446f15a7d55d53533790438"
+  },
+  "ground_truth_test_accuracy": null,
+  "end_to_end_fps": null,
+  "limitations": [
+    "six demo crops were also calibration inputs",
+    "one VN photo and one short sampled VN video",
+    "event count is not a unique-vehicle benchmark",
+    "decoder and detector remain on CPU; Renesas unverified"
+  ],
+  "collection_host": {
+    "kernel": "7.0.0-38-generic",
+    "architecture": "x86_64"
+  },
+  "git_head_before_checkpoint": "068fc2ed114e60c55cb8d818fc54dd4e3783a31f",
+  "git_branch": "truc/parseq-cross-platform",
+  "dxrt_status_at_collection": "DXRT v3.4.2+d803450\n=======================================================\n * Device 0: M1, Accelerator type\n---------------------   Version   ---------------------\n * RT Driver version   : v2.6.0\n * PCIe Driver version : v2.5.0\n-------------------------------------------------------\n * FW version          : v2.7.0\n--------------------- Device Info ---------------------\n * Memory : LPDDR5 5600 Mbps, 3.92GiB\n * Board  : M.2, Rev 1.0\n * Chip Offset : 0\n * PCIe   : Gen3 X4 [02:00:00]\n\nNPU 0: voltage 750 mV, clock 1000 MHz, temperature 53'C\nNPU 1: voltage 750 mV, clock 1000 MHz, temperature 53'C\nNPU 2: voltage 750 mV, clock 1000 MHz, temperature 53'C\n======================================================="
+}

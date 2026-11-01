@@ -1,3 +1,19 @@
+# Renesas / DEEPX AI conversion project
+
+Vietnamese license plate recognition workbench based on [PARSeq](https://github.com/baudm/parseq).
+
+**Start here:** [Windows + Ubuntu setup](docs/SETUP_DUAL_BOOT.md) | [Automatic image/video ALPR](docs/ALPR_AUTO_WINDOWS.md) | [DX-M1 deployment and verified milestone](docs/DXM1_DEPLOYMENT.md) | [Ubuntu preparation](docs/DEEPX_UBUNTU_PREP.md) | [Progress and limitations](docs/PROJECT_STATUS.md).
+
+Current additions: automatic plate detection, one/two-line OCR and video event aggregation to CSV on PC, plus cropped-image OCR and encoder-only ONNX export with fidelity checks. The automatic pipeline has been exercised on Windows; representative accuracy and end-to-end performance remain to be measured.
+
+DX-M1 hardware is now verified on Ubuntu: PCIe Gen3 x4, signed drivers, DX-RT 3.4.2 and DX-COM 2.4.1. An equivalent raw-patch MatMul encoder compiled to 1 NPU group / 0 CPU groups. The DX-M1 encoder + unchanged PyTorch CPU decoder matched PyTorch text on 6/6 demo crops, a VN full-scene photo and 30 sampled frames of a VN video. Detection remains ONNX Runtime CPU. These are small smoke tests, not representative accuracy or real-time performance results. See [deployment, evidence and limits](docs/DXM1_DEPLOYMENT.md).
+
+Optional ground-truth data preparation: [Windows guide](docs/VN_OCR_WINDOWS.md). Manual annotation is for evaluation/training data; automatic ALPR inference does not require drawing boxes or entering plate text.
+
+The original PARSeq documentation and attribution are preserved below.
+
+---
+
 ## News
 - **2024-02-22**: Updated for PyTorch 2.0 and Lightning 2.0
 - **2024-01-16**: Featured in the [NVIDIA Developer Blog](https://developer.nvidia.com/blog/robust-scene-text-detection-and-recognition-introduction/)
