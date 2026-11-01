@@ -1,6 +1,6 @@
 # Chuẩn bị DEEPX DX-M1 trên Ubuntu
 
-Cập nhật: 2026-10-31. Đây là bản ghi setup trên laptop của Trực và hướng dẫn thử tiếp; chưa xác minh inference phần cứng.
+Cập nhật: 2026-11-01. Card đã được nhận qua PCIe, nạp driver dưới Secure Boot và chạy inference thành công. ALPR dùng encoder DX-M1 + decoder CPU đã qua smoke test ảnh/video VN. Xem [hướng dẫn triển khai và bằng chứng](DXM1_DEPLOYMENT.md); các bước dưới lưu lại cách chuẩn bị máy.
 
 ## 1. Cấu hình đã ghi nhận
 
@@ -17,9 +17,9 @@ Cập nhật: 2026-10-31. Đây là bản ghi setup trên laptop của Trực v�
 | Driver | RT driver 2.6.0; PCIe driver 2.5.0 theo log build |
 | Driver đã cài | dx_dma và dxrt_driver trong /lib/modules/7.0.0-38-generic/updates/ |
 | Chữ ký | MOK đã enroll; modinfo có signer, vermagic đúng kernel |
-| Phần cứng | DX-M1 M.2; chưa gắn/kiểm tra PCIe trong các log hiện có |
+| Phần cứng | DX-M1 M.2 Rev 1.0, PCIe 1ff4:0100, Gen3 x4, LPDDR5 3.92 GiB, firmware thực tế 2.7.0 |
 
-Kiểm tra signer mới xác nhận có chữ ký trong file; cần nạp module thực tế để xác minh kernel chấp nhận.
+Đã nạp thành công dx_dma và dxrt_driver khi Secure Boot bật; dxrt-cli nhận Device 0: M1. Firmware trên card là 2.7.0; phiên bản kho dx_fw trong SDK không phải phiên bản firmware đã flash.
 
 ## 2. Thư mục và môi trường
 
@@ -157,7 +157,7 @@ cd "$HOME/OneKiwi/dx-all-suite"
   --loops 10
 ```
 
-**Lệnh inference trên chưa được chạy trên card của nhóm.** Ví dụ dùng input giả điền 0 để thử inference; latency/FPS của nó không phải accuracy phân loại hay FPS của pipeline ALPR.
+**Đã chạy thành công trên card của nhóm:** MobileNetV2 10 vòng, trung bình 5.763 ms trong lần thử ngắn. Ví dụ dùng input giả điền 0; con số này không phải accuracy phân loại hay FPS pipeline ALPR.
 
 Ghi lại: thiết bị PCIe, kernel, firmware trên card, phiên bản driver/runtime, model/hash, kết quả chạy và log lỗi nếu có.
 
@@ -166,7 +166,7 @@ Ghi lại: thiết bị PCIe, kernel, firmware trên card, phiên bản driver/r
 `alpr_auto.py` hiện dùng detector ONNX Runtime CPU và PARSeq PyTorch CPU/CUDA.
 Cài SDK hoặc tải MobileNetV2 không tự chuyển ứng dụng sang NPU.
 
-Encoder PARSeq mới được export sang ONNX. Cần compile thử, xử lý phép toán chưa hỗ trợ nếu có, calibration, đối chiếu output và viết adapter DX-RT. Decoder vẫn PyTorch; detector cũng cần được đánh giá/chuyển đổi riêng.
+Encoder PARSeq đã compile và chạy trên DX-M1 qua phép thay đầu patch projection bằng MatMul tương đương. Dùng alpr_auto_dxm1.py cho encoder NPU + decoder PyTorch CPU; alpr_auto.py vẫn là baseline PC. Xem [DXM1_DEPLOYMENT.md](DXM1_DEPLOYMENT.md) để compile, kiểm tra fidelity và chạy ảnh/video. Detector vẫn ONNX Runtime CPU; chưa tích hợp Renesas.
 
 ## Tài liệu nguồn
 

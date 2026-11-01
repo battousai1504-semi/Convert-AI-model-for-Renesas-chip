@@ -1,51 +1,61 @@
-# Phạm vi và tiến độ
+# Trạng thái dự án
 
-Cập nhật: 2026-10-31 (Asia/Ho_Chi_Minh).
+Cập nhật: **2026-11-01**, theo log thực thi của Trực trên card thật.
 
-Trang này tổng hợp mã trên nhánh `truc/parseq-cross-platform` và log Trực cung cấp. Các kết quả trên laptop không phải lần chạy lại trong CI.
+Mục tiêu: nhận diện biển số Việt Nam một/hai dòng từ ảnh toàn cảnh và video,
+xuất CSV; bước hiện tại là DEEPX DX-M1 M.2 trên Ubuntu, sau đó mới tích hợp Renesas.
 
-## Mục tiêu
-
-- Ưu tiên biển Việt Nam, một dòng và hai dòng.
-- Nhận ảnh crop, ảnh toàn cảnh và video toàn cảnh; tự tìm biển và đọc chữ.
-- Đầu ra ban đầu là CSV; video tổng hợp nhiều lần đọc theo lượt xuất hiện.
-- Chạy thử trên DEEPX DX-M1 M.2, sau đó tích hợp Renesas theo kiến trúc công ty xác nhận.
-- Mở rộng quốc tế/nhận diện quốc gia ở giai đoạn sau.
-- Chưa có ngưỡng nghiệm thu accuracy hoặc tốc độ được công ty xác nhận.
-
-## Thành phần và bằng chứng
-
-| Thành phần | Kết quả hiện có | Giới hạn |
+| Hạng mục | Đã xác minh | Giới hạn |
 | --- | --- | --- |
-| PARSeq trên Windows | CPU và RTX 4050 CUDA chạy được | Chạy được không chứng minh OCR đúng |
-| PARSeq trên Ubuntu | Python 3.10, CPU; demo `coco-1166773.jpg` trả `Chevrol` | Chưa có xác nhận chạy CUDA trên Ubuntu laptop |
-| `ocr_batch.py` | CSV CPU/CUDA và báo cáo so sánh | Đầu vào là crop một dòng |
-| Encoder ONNX | Trên laptop Ubuntu, PASS 6/6 ảnh demo so với PyTorch; input FP32 `[1,3,32,128]`, opset 17 | Chỉ encoder; decoder vẫn PyTorch. Đây là độ khớp chuyển đổi, không phải accuracy |
-| `alpr_auto.py` | Tự detect, xử lý một/hai dòng, OCR, tổng hợp track và xuất CSV | Detector ONNX Runtime CPU; OCR PyTorch CPU/CUDA; chưa có backend DX-RT |
-| Ảnh toàn cảnh VN trên Windows | 6 ảnh, 14 detections, 14 events | Chưa đối chiếu toàn bộ với nhãn chuẩn |
-| Video trên Windows | `test_1.mp4`: 30 khung được xử lý, 47 detections, 10 events | Không suy ra 10 xe duy nhất, accuracy hoặc FPS toàn luồng |
-| Dữ liệu/đánh giá | `annotate_plates.py`, `evaluate_plate_groups.py` | Khoanh vùng/nhập nhãn chỉ phục vụ tạo ground truth; không bắt buộc khi dùng ALPR tự động |
-| Unit tests | Trực đã gửi log 5/5 baseline tests OK trên Windows | Không ghi nhận tổng số tests khác hay kết quả Linux khi chưa có log mới |
-| DX-COM | 2.4.1, CLI báo target M1 | Chưa compile encoder PARSeq thành `.dxnn` |
-| DX-RT | 3.4.2, `dxrt-cli -h` hoạt động, `import dx_engine` OK, `pip check` sạch | Chưa gọi inference trên card |
-| Driver trên Ubuntu | Build và cài `dx_dma` + `dxrt_driver`; signer là MOK đã enroll; vermagic `7.0.0-38-generic` | Chưa xác minh nạp module, PCIe hoặc giao tiếp phần cứng |
-| Model mẫu | MobileNetV2 `.dxnn` đã tải từ DEEPX, khoảng 7.4 MiB | Chưa chạy trên DX-M1 |
-| Renesas | Chưa tích hợp | Cần xác nhận kiến trúc đích |
+| Baseline Windows | CPU/CUDA OCR, detector tự động, ảnh/video, CSV | Chưa có benchmark VN đại diện |
+| Ubuntu / phần cứng | Kernel 7.0.0-38, Secure Boot bật, driver ký MOK nạp được, PCIe Gen3 x4 | Driver cài thủ công theo kernel |
+| SDK | DX-COM 2.4.1; DX-RT 3.4.2; RT driver 2.6.0; PCIe driver 2.5.0; FW card 2.7.0 | Không flash firmware |
+| Encoder ONNX FP32 | Khớp PyTorch 6/6 ảnh demo | Chưa phải triển khai NPU |
+| Encoder DX-M1 | Đầu raw-patch MatMul tương đương; 1 NPU group, 0 CPU groups | CPU vẫn resize/pack patch; INT8 có sai lệch feature |
+| OCR ghép encoder NPU + decoder CPU | 6/6 text giống PyTorch; không lỗi thực thi | Cùng 6 ảnh dùng calibration; không phải holdout |
+| ALPR ảnh toàn cảnh VN | Tự detect/cắt/đọc 30A33918, 1 detection / 1 event, giống CPU | Một ảnh smoke test |
+| ALPR video VN | 30 frame đã xử lý, 30 detections, 1 event; 59V184625 ở cả CPU/DX-M1 | Frame lấy mẫu, không phải 30 biển độc lập |
+| Renesas / sản phẩm khách hàng | Chưa xác minh | Cần tập dữ liệu gán nhãn và benchmark toàn pipeline |
 
-Log export trên laptop Ubuntu: `artifacts/encoder_20261031_225454_044655`.
-Các output mẫu: CHEWBACCA, Chevrol, SALMON, Verbandsteffe, Kappa, 3rdAve.
-Giữ nguyên output gốc trong báo cáo; không dùng chúng làm ground truth.
+## Mô hình thực sự đang chạy ở đâu?
 
-## Mốc tiếp theo
+- Detector: ONNX Runtime CPU.
+- Resize, crop, tách dòng, pack patch: CPU.
+- Encoder PARSeq đã biến đổi tương đương: DX-M1, một NPU group trong run thành công.
+- Decoder PARSeq giữ nguyên autoregression/refinement: PyTorch CPU trong các log đã xác minh.
+- Gộp sự kiện, preview, CSV: CPU.
 
-1. Gắn DX-M1, xác nhận PCIe, nạp driver có chữ ký và đọc trạng thái runtime.
-2. Chạy model mẫu hãng để kiểm tra inference phần cứng.
-3. Thử compile encoder PARSeq bằng DX-COM; lưu log phép toán, cấu hình và phiên bản.
-4. Chuẩn bị dữ liệu calibration đại diện, tách biệt bộ đánh giá; đo sai lệch sau lượng tử hóa.
-5. Tích hợp DX-RT vào ALPR theo kết quả compiler; đánh giá cả detector và encoder. Decoder hiện vẫn PyTorch.
-6. Đo accuracy cả biển và hiệu năng toàn luồng trên dữ liệu VN có nhãn; đánh giá lỗi tracking, biển nghiêng/mờ, hai dòng.
-7. Tích hợp Renesas sau khi thống nhất phần cứng và giao diện.
+`--device` của `alpr_auto_dxm1.py` chọn thiết bị **decoder**, không chọn encoder.
 
-Hướng dẫn: [hai OS](SETUP_DUAL_BOOT.md), [ALPR tự động](ALPR_AUTO_WINDOWS.md), [chuẩn bị DX-M1 trên Ubuntu](DEEPX_UBUNTU_PREP.md).
+## Bằng chứng và khả năng chạy lại
 
-ONNX hợp lệ không đồng nghĩa compiler hỗ trợ. PASS đối chiếu không đồng nghĩa OCR đúng. Driver build/cài được không đồng nghĩa đã nạp được hoặc đã chạy trên NPU.
+Xem [DXM1_DEPLOYMENT.md](DXM1_DEPLOYMENT.md) cho đường dẫn run, lệnh và nguồn mẫu.
+`scripts/collect_dxm1_evidence.py` tạo `docs/evidence/dxm1_20261101.json` từ báo cáo
+thực tế trên laptop: kiểm tra hash model xuyên suốt các lần thử, đối chiếu lại CSV,
+lưu số lượng và provenance. File chỉ được tạo khi báo cáo có đủ và nhất quán.
+Model, checkpoint, video, SDK và môi trường Python không đưa vào Git.
+
+Helper tests dùng stub/ONNX trên máy phát triển tách biệt với log test card thật.
+Kết quả chạy tests của laptop được lưu khi chuẩn bị checkpoint Git; không coi tests
+stub là bằng chứng thực thi NPU.
+
+## Điều đã sửa trong quá trình chuyển model
+
+Đường RGB/patch Conv ban đầu compile được nhưng text sai 6/6. Audit với cùng binary,
+input và ORT bật ở cả Python/C++ cho thấy đầu ra giống nhau giữa hai API, nhưng khác
+ONNX. Thử đầu embedding đã thu hẹp vấn đề về đường đầu encoder. Pack patch trên CPU
+và đổi projection sang MatMul với normalization gộp vào weights/bias cho kết quả tốt.
+Đây là workaround đã đo; chưa chứng minh nguyên nhân gốc thuộc compiler, runtime
+hay firmware. Giữ các script probe/audit để tái hiện, không dùng run RGB cũ cho ALPR.
+
+## Việc tiếp theo
+
+1. Giữ checkpoint code, Dockerfile và báo cáo nhỏ để các thành viên chạy lại.
+2. Xây tập đánh giá VN có nhãn đúng: xe máy/ô tô, hai dòng, góc nghiêng, đêm, mờ,
+   nhiều xe; tách calibration/training/test.
+3. Đo độ đúng cả biển và lỗi detector/OCR riêng; kiểm tra sự kiện/tracking trên video.
+4. Đo thời gian từng bước và toàn pipeline trong điều kiện đã ghi rõ; chưa công bố FPS thực tế.
+5. Sau khi có baseline đáng tin, tối ưu và tích hợp với máy chủ Renesas của công ty.
+
+[Setup Windows/Ubuntu](SETUP_DUAL_BOOT.md) · [Baseline tự động](ALPR_AUTO_WINDOWS.md) ·
+[Chuẩn bị Ubuntu](DEEPX_UBUNTU_PREP.md)
