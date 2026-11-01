@@ -2,13 +2,37 @@
 
 Vietnamese license plate recognition workbench based on [PARSeq](https://github.com/baudm/parseq).
 
-**Start here:** [Windows + Ubuntu setup](docs/SETUP_DUAL_BOOT.md) | [Automatic image/video ALPR](docs/ALPR_AUTO_WINDOWS.md) | [DX-M1 deployment and verified milestone](docs/DXM1_DEPLOYMENT.md) | [Ubuntu preparation](docs/DEEPX_UBUNTU_PREP.md) | [Progress and limitations](docs/PROJECT_STATUS.md).
+**Start here:** [Demo ảnh/video mới](docs/DEMO.md) | [Windows + Ubuntu setup](docs/SETUP_DUAL_BOOT.md) | [Automatic image/video ALPR](docs/ALPR_AUTO_WINDOWS.md) | [DX-M1 deployment and verified milestone](docs/DXM1_DEPLOYMENT.md) | [Ubuntu preparation](docs/DEEPX_UBUNTU_PREP.md) | [Progress and limitations](docs/PROJECT_STATUS.md).
 
 Current additions: automatic plate detection, one/two-line OCR and video event aggregation to CSV on PC, plus cropped-image OCR and encoder-only ONNX export with fidelity checks. The automatic pipeline has been exercised on Windows; representative accuracy and end-to-end performance remain to be measured.
 
 DX-M1 hardware is now verified on Ubuntu: PCIe Gen3 x4, signed drivers, DX-RT 3.4.2 and DX-COM 2.4.1. An equivalent raw-patch MatMul encoder compiled to 1 NPU group / 0 CPU groups. The DX-M1 encoder + unchanged PyTorch CPU decoder matched PyTorch text on 6/6 demo crops, a VN full-scene photo and 30 sampled frames of a VN video. Detection remains ONNX Runtime CPU. These are small smoke tests, not representative accuracy or real-time performance results. See [deployment, evidence and limits](docs/DXM1_DEPLOYMENT.md).
 
 Optional ground-truth data preparation: [Windows guide](docs/VN_OCR_WINDOWS.md). Manual annotation is for evaluation/training data; automatic ALPR inference does not require drawing boxes or entering plate text.
+
+## Demo ảnh/video mới trên DX-M1
+
+**Mở [flow demo từng bước](docs/DEMO.md) khi trình diễn tại công ty.** Trên laptop Ubuntu đã setup card/model:
+
+```bash
+.venv-linux/bin/python demo_alpr.py --check
+.venv-linux/bin/python demo_alpr.py
+```
+
+Lệnh thứ hai mở hộp chọn ảnh/video mới (hoặc cho dán đường dẫn), chạy encoder DX-M1
+và mở ảnh/video có khung + chữ. Video được xuất thêm H.264; mỗi lượt có CSV,
+summary và trang xem kết quả trong thư mục results riêng. Flow này xử lý file rồi
+phát kết quả, chưa phải camera live hoặc bằng chứng FPS thời gian thực.
+
+| Thành phần pipeline | Thiết bị |
+| --- | --- |
+| YOLOv9-t tìm biển; crop/chỉnh ảnh/tách dòng/pack patch | CPU |
+| Encoder PARSeq đã chuyển đổi | DX-M1 |
+| Decoder PARSeq; tracking, vẽ kết quả và CSV | CPU |
+
+Bộ đánh giá có nhãn hiện tại: CPU và DX-M1 cùng đúng **5/5 ảnh VN development**,
+không bỏ sót/phát hiện thừa trong bộ này. Xem [hướng dẫn đánh giá](docs/VN_ALPR_EVALUATION.md)
+và [báo cáo thực tế](docs/evidence/vn_eval_20261101.json); kết quả nhỏ này không đại diện mọi điều kiện.
 
 The original PARSeq documentation and attribution are preserved below.
 
