@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+vnRepo="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+vnPython="$vnRepo/.venv-linux/bin/python"
+if [ ! -x "$vnPython" ]; then
+    echo "STOP: Thieu $vnPython. Hoan thanh setup Ubuntu/Python truoc."
+    exit 1
+fi
+exec "$vnPython" "$vnRepo/alpr_console.py" "$@"

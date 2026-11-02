@@ -10,19 +10,27 @@ DX-M1 hardware is now verified on Ubuntu: PCIe Gen3 x4, signed drivers, DX-RT 3.
 
 Optional ground-truth data preparation: [Windows guide](docs/VN_OCR_WINDOWS.md). Manual annotation is for evaluation/training data; automatic ALPR inference does not require drawing boxes or entering plate text.
 
-## Demo ảnh/video mới trên DX-M1
+## Demo nhanh bằng menu
 
-**Mở [flow demo từng bước](docs/DEMO.md) khi trình diễn tại công ty.** Trên laptop Ubuntu đã setup card/model:
+**Mở [flow demo và bảng lệnh ngắn](docs/DEMO.md) khi trình diễn tại công ty.** Trên laptop Ubuntu đã setup card/model:
 
 ```bash
-.venv-linux/bin/python demo_alpr.py --check
-.venv-linux/bin/python demo_alpr.py
+./alpr
 ```
 
-Lệnh thứ hai mở hộp chọn ảnh/video mới (hoặc cho dán đường dẫn), chạy encoder DX-M1
-và mở ảnh/video có khung + chữ. Video được xuất thêm H.264; mỗi lượt có CSV,
-summary và trang xem kết quả trong thư mục results riêng. Flow này xử lý file rồi
-phát kết quả, chưa phải camera live hoặc bằng chứng FPS thời gian thực.
+Menu: chuẩn bị card → thêm ảnh/video → quét → mở lại kết quả. Hoặc dùng các lệnh ngắn:
+
+```bash
+./alpr start
+./alpr add
+./alpr scan
+./alpr open
+```
+
+`add` chọn file mới qua hộp thoại hoặc nhận đường dẫn; `scan` quét hàng đợi và tự
+mở ảnh/video có khung + chữ. Mặc định giới hạn 120 frame/video để demo ngắn;
+`./alpr scan --all` xử lý toàn bộ. Video có bản H.264 và CSV, được lưu theo từng lượt.
+Đây là xử lý file rồi phát kết quả, chưa phải camera live hoặc bằng chứng FPS thời gian thực.
 
 | Thành phần pipeline | Thiết bị |
 | --- | --- |

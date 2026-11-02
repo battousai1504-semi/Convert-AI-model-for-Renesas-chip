@@ -283,6 +283,7 @@ def main(argv=None):
     parser.add_argument('--max-frames', type=int, default=0, help='Giới hạn frame xử lý mỗi video; 0 = toàn bộ')
     parser.add_argument('--every-n-frames', type=int, default=1, help='1 = xử lý mọi frame; tăng để lấy mẫu')
     parser.add_argument('--layout', choices=('auto', 'one', 'two'), default='auto')
+    parser.add_argument('--output', type=Path, help='Thư mục output MỚI; mặc định tạo trong results')
     parser.add_argument('--no-open', action='store_true', help='Chỉ tạo output, không mở trình duyệt/VLC')
     args = parser.parse_args(argv)
     try:
@@ -302,7 +303,13 @@ def main(argv=None):
             require(
                 shutil.which('ffmpeg') and shutil.which('ffprobe'), 'Video cần ffmpeg: sudo apt-get install -y ffmpeg'
             )
-        output = repo / 'results' / datetime.now().strftime('demo_%Y%m%d_%H%M%S_%f')
+        output = (
+            args.output.expanduser()
+            if args.output
+            else repo / 'results' / datetime.now().strftime('demo_%Y%m%d_%H%M%S_%f')
+        )
+        output = (repo / output).resolve() if not output.is_absolute() else output.resolve()
+        require(not output.exists(), 'Output đã tồn tại; chọn một thư mục mới.')
         require(
             not source.is_dir() or source not in output.parents,
             'Chọn thư mục dữ liệu riêng, không chọn repo/results chứa output.',

@@ -1,12 +1,102 @@
-# Flow demo DX-M1: chọn ảnh hoặc video mới
+# Demo nhanh: menu và lệnh ngắn
 
-**Mở trang này khi demo.** Flow dùng laptop Ubuntu đã setup DX-M1, encoder PARSeq
-đã compile và `.venv-linux` đang chạy được. Người xem có thể đưa file ảnh/video mới;
-không cần khoanh biển, nhập text chuẩn hoặc sửa source code.
+Trên laptop Ubuntu đã setup card/model, mở terminal tại repo rồi chạy:
 
-## 1. Trước buổi demo: làm một lần
+```bash
+./alpr
+```
 
-Lấy code đúng nhánh trên laptop:
+Menu có các nút số để **chuẩn bị card → thêm ảnh/video → quét → mở lại kết quả**.
+Mỗi lần chọn số rồi Enter. Không cần nhớ tên artifact, đường dẫn output hay lệnh Python.
+Đổi file đầu vào không cần compile lại encoder.
+
+## 1. Các lệnh dùng lúc demo
+
+| Lệnh | Việc thực hiện |
+| --- | --- |
+| `./alpr` | Mở menu, dùng số để thao tác |
+| `./alpr start` | Nạp hai driver rồi kiểm tra DX-M1; có thể hỏi mật khẩu sudo |
+| `./alpr add` | Chọn ảnh/video mới và sao chép vào hàng đợi |
+| `./alpr status` | Xem các file đang chọn và đường dẫn kết quả gần nhất |
+| `./alpr scan` | Quét hàng đợi và tự mở kết quả; tối đa 120 frame/video |
+| `./alpr scan --all` | Quét mọi frame, toàn bộ các video trong hàng đợi |
+| `./alpr open` | Mở lại trang ảnh/video của lần quét thành công gần nhất |
+| `./alpr open --folder` | Mở thư mục chứa ảnh/video, CSV và summary |
+| `./alpr clear` | Bỏ chọn toàn bộ input; giữ file gốc, bản sao và kết quả |
+| `./alpr check` | Chỉ kiểm tra môi trường/card, không nạp driver/inference |
+| `./alpr help` | Xem trợ giúp |
+
+Lượt demo đầu sau khi boot:
+
+```bash
+./alpr start
+./alpr add
+./alpr scan
+```
+
+Lượt tiếp theo với input khách khác:
+
+```bash
+./alpr clear
+./alpr add
+./alpr scan
+```
+
+Hoặc chỉ giữ cửa sổ menu `./alpr`, chọn lần lượt 1 → 2 → 3. Menu số 4 mở lại kết quả,
+số 5 xem input, số 6 bỏ chọn input và số 0 thoát.
+
+`add` thêm vào hàng đợi hiện tại, không tự xóa các file đã chọn. Có thể thêm nhiều
+lần rồi quét chung. Nếu thiếu zenity, terminal cho dán/kéo thả đường dẫn rồi Enter.
+Đường dẫn có dấu cách được hỗ trợ. Nếu biết đường dẫn, đặt sau `./alpr add`; có thể
+đưa nhiều đường dẫn hoặc thư mục ảnh/video. Ví dụ tự kiểm tra với ảnh đã có:
+
+```bash
+./alpr add inputs/vn_eval_v1/images/vn_dev_01.jpg
+```
+
+Nguồn này có sẵn sau lượt `run_vn_eval.sh`; ảnh/video khách đưa được chọn bằng hộp
+chọn file, không cần đặt một tên cố định. Input là file cục bộ; chưa phải webcam/URL.
+
+## 2. Quét nhanh hay quét toàn bộ?
+
+`./alpr scan` xử lý mọi frame trong phần đã chọn, nhưng **giới hạn 120 frame đầu
+mỗi video** để lượt demo ngắn. Ảnh tĩnh vẫn xử lý từng ảnh. Muốn toàn bộ video,
+dùng `./alpr scan --all`; có thể mất lâu tùy độ dài và số biển.
+
+Muốn giới hạn khác hoặc chỉ lưu output:
+
+```bash
+./alpr scan --max-frames 300
+./alpr scan --all --no-open
+```
+
+120 frame không có nghĩa là 120 giây. Video được xử lý xong rồi mở phát lặp bằng VLC;
+đây không phải camera live và FPS của trình phát không phải FPS inference.
+Nếu biển chỉ xuất hiện ở đoạn sau, dùng --all hoặc --max-frames lớn hơn.
+
+## 3. Kết quả và input nằm đâu?
+
+- File gốc không bị sửa. Bản sao input nằm ở `inputs/demo_inbox/files`.
+- Danh sách đang chọn và kết quả gần nhất được ghi ở `inputs/demo_inbox/state.json`.
+- Mỗi lần scan có snapshot chỉ gồm input đang chọn ở `inputs/demo_batches`.
+  File cũ đã bỏ chọn không bị quét lẫn vào lượt mới.
+- Kết quả nằm trong thư mục mới `results/alpr_<timestamp>`.
+- `clear` chỉ bỏ chọn, không xóa các bản sao, snapshot hoặc kết quả cũ.
+- `open` nhớ lần quét thành công tạo bởi `./alpr`, không tự đoán từ các run cũ.
+  Nếu lượt mới lỗi, vẫn giữ con trỏ tới lần thành công trước và báo lỗi rõ.
+
+Output có index.html, ảnh đã vẽ khung/text, video H.264, detections.csv, events.csv,
+frames.csv, summary.json và demo_run.json. Trang kết quả mở bằng trình duyệt; nếu
+có VLC thì video đầu tiên mở phát lặp. Các video khác cũng nằm trên trang kết quả.
+`./alpr open --folder` để lấy file gửi công ty.
+
+Input và results đã được gitignore. Không git add ảnh/video khách đưa. Code wrapper
+không upload dữ liệu hay gửi tin nhắn. Menu được thiết kế cho một phiên thao tác
+trên laptop, chưa phải hàng đợi đồng thời cho nhiều người dùng.
+
+## 4. Chuẩn bị máy một lần
+
+Lấy code đúng nhánh:
 
 ```bash
 cd "$HOME/OneKiwi/renesas-alpr"
@@ -14,166 +104,70 @@ git switch truc/parseq-cross-platform
 git pull --ff-only origin truc/parseq-cross-platform
 ```
 
-Cài công cụ chọn file, chuyển codec và phát video nếu máy chưa có:
+Cần `.venv-linux` đã chạy được pipeline và full encoder đã compile trên laptop.
+Các công cụ cho chọn file và phát video có thể cài một lần:
 
 ```bash
 sudo apt-get update
 sudo apt-get install -y zenity ffmpeg vlc
 ```
 
-Không cần chạy lại lệnh cài mỗi lượt demo. `zenity` mở hộp chọn file; nếu không có,
-launcher cho dán/kéo thả đường dẫn trong terminal. Video được xuất thêm H.264 và
-mở VLC để tránh phụ thuộc ứng dụng MP4 mặc định. Ảnh/HTML mở qua trình duyệt.
+Sau đó dùng `./alpr start`. Driver phải khớp kernel đang boot. Wrapper không cài SDK,
+flash firmware hoặc đổi kernel. Nếu clone repo trên máy mới, làm
+[setup Ubuntu](DEEPX_UBUNTU_PREP.md), [Python](SETUP_DUAL_BOOT.md),
+[compile encoder](DXM1_DEPLOYMENT.md) trước. Model/SDK/venv không nằm trong Git.
+Chạy thử trước với một ảnh để cache detector/checkpoint và kiểm tra cả pipeline.
 
-Sau khi khởi động lại Ubuntu, nạp driver và kiểm tra:
+Nếu file `alpr` chưa có quyền chạy, dùng `bash alpr` cho menu hoặc `chmod +x alpr`.
+Gọi script từ thư mục khác bằng đường dẫn đầy đủ tới file alpr vẫn được; input tương
+đối được hiểu theo thư mục terminal hiện tại.
 
-```bash
-sudo modprobe dx_dma
-sudo modprobe dxrt_driver
-cd "$HOME/OneKiwi/renesas-alpr"
-.venv-linux/bin/python demo_alpr.py --check
-```
+## 5. Giải thích với khách
 
-Cần thấy `DX-M1: OK`; `--check` chỉ kiểm tra môi trường/card, không chạy inference.
-Driver phải khớp kernel đang boot. Nếu clone repo trên máy mới, làm
-[setup Ubuntu](DEEPX_UBUNTU_PREP.md), [setup Python](SETUP_DUAL_BOOT.md) và
-[compile full encoder](DXM1_DEPLOYMENT.md) trước; model/SDK/venv không nằm trong Git.
-Detector và checkpoint cần được tải/cached từ lượt chạy đầu. Chạy thử một ảnh có sẵn
-trước khi đến công ty để kiểm tra cả pipeline, không chỉ trạng thái card:
+“Đây là ảnh/video mới do anh/chị đưa. Hệ thống tự tìm biển và đọc chữ, không cần
+khoanh hay nhập đáp án. Encoder PARSeq chạy trên DX-M1; detector, xử lý ảnh và
+decoder chạy CPU. Kết quả hiển thị trên ảnh/video và có CSV để tích hợp.”
 
-```bash
-.venv-linux/bin/python demo_alpr.py --source inputs/vn_eval_v1/images/vn_dev_01.jpg
-```
-
-Ảnh ví dụ ở trên có sẵn sau lượt `run_vn_eval.sh`. Nó chỉ là tự kiểm tra; lúc demo
-người xem có thể chọn file hoàn toàn mới ở bước 2.
-
-## 2. Tại buổi demo: một lệnh cho nguồn mới
-
-```bash
-cd "$HOME/OneKiwi/renesas-alpr"
-.venv-linux/bin/python demo_alpr.py
-```
-
-1. Hộp chọn file hiện ra: chọn ảnh hoặc video người khác đưa, ở Downloads, USB
-   hoặc thư mục bất kỳ. Bấm Cancel sẽ thoát mà không chạy inference.
-2. Hệ thống chạy **ảnh/frame mới** qua detector + OCR. Terminal in tiến độ.
-3. Chạy xong tự mở trang kết quả có ảnh/khung/text và link CSV. Với video,
-   tự tạo bản H.264 và mở VLC phát lặp để dễ trình diễn; dừng bằng nút Stop/đóng VLC.
-4. Chọn file khác: quay lại terminal và chạy lại cùng lệnh. Mỗi lượt tạo output mới.
-
-Nếu không hiện hộp chọn file, kéo file từ Files vào terminal (hoặc dán đường dẫn)
-rồi Enter. Launcher hỗ trợ đường dẫn có dấu cách, dấu nháy do kéo thả và file URI.
-Cũng có thể truyền `--source` kèm đường dẫn thực của file/thư mục; thư mục sẽ được
-pipeline duyệt ảnh/video. Đầu vào luôn là file cục bộ, không phải link YouTube/webcam.
-
-Không cần compile lại encoder khi đổi ảnh/video. Đổi checkpoint hoặc model là việc
-khác: phải kiểm tra/compile lại artifact phù hợp.
-
-## 3. Video dài: chọn cách xử lý rõ ràng
-
-Mặc định xử lý **mọi frame, toàn video** (`--max-frames 0`, `--every-n-frames 1`).
-Nên chọn clip ngắn để buổi demo ít phải chờ. Muốn thử nhanh 120 frame đầu được xử lý:
-
-```bash
-.venv-linux/bin/python demo_alpr.py --max-frames 120
-```
-
-Muốn lấy mỗi 3 frame một frame:
-
-```bash
-.venv-linux/bin/python demo_alpr.py --every-n-frames 3
-```
-
-`max-frames` tính theo số frame được xử lý, không phải số giây. Khi lấy mẫu,
-preview có FPS lấy mẫu theo nguồn. Video mở sau khi xử lý xong, **không phải camera
-live**; tốc độ phát không phải tốc độ inference. Không dùng FPS của trình phát để
-báo hiệu năng hệ thống.
-
-## 4. Kết quả nằm ở đâu?
-
-Terminal in `KẾT QUẢ: .../results/demo_<timestamp>` và `MỞ: .../index.html`.
-
-| File | Ý nghĩa |
+| Thành phần | Thiết bị |
 | --- | --- |
-| index.html | Trang xem kết quả trên máy, không cần web server |
-| 001_…jpg | Ảnh model tự vẽ khung biển và text OCR; không có GT overlay |
-| 001_preview.mp4 | Preview video gốc của pipeline |
-| 001_preview_H264.mp4 | Bản H.264 để mở/xem/gửi thuận tiện |
-| detections.csv | Kết quả mỗi biển ở mỗi frame |
-| events.csv | Sự kiện gộp theo tracking heuristic |
-| frames.csv | Trạng thái và compute time theo frame |
-| summary.json | Backend, model hash, bộ đếm và metadata pipeline |
-| demo_run.json | Lệnh/nguồn/run model và trạng thái DX-RT của lượt demo |
+| YOLOv9-t tìm biển | CPU |
+| Crop/chỉnh ảnh/tách dòng/resize/pack patch | CPU |
+| Encoder PARSeq đã chuyển đổi | DX-M1 |
+| Decoder PARSeq, tracking, vẽ kết quả và CSV | CPU |
 
-Nếu dùng thư mục nhiều nguồn, prefix 001/002/... sẽ khác nhau theo nguồn. Trang
-kết quả hiển thị toàn bộ ảnh/video, VLC tự mở video đầu tiên. Có thể chạy
-`--no-open` để chỉ tạo file khi không có desktop hoặc muốn tự mở.
+Trên bộ development nhỏ đã có nhãn, CPU và DX-M1 cùng đúng 5/5 ảnh. Với input mới
+chưa có đáp án chuẩn thì chưa công bố accuracy. Video đã xử lý rồi phát lại chưa
+chứng minh thời gian thực. Host hiện là laptop Ubuntu; chưa tích hợp host Renesas.
 
-Ảnh/video mới chưa có nhãn nên không có accuracy. Trang kết quả sẽ hiển thị trung
-thực trường hợp không tìm thấy biển hoặc OCR báo lỗi; không tự đổi sang encoder CPU.
-Màu khung trong preview: xanh lá là không bị heuristic gắn cờ, vàng/cam là cần xem
-lại. Màu này không phải ground-truth accuracy hoặc xác suất đọc đúng đã hiệu chuẩn.
+Màu xanh/vàng trong preview là heuristic cần xem lại, không phải xác suất đọc đúng
+đã hiệu chuẩn. Nếu không thấy biển hoặc OCR sai, giữ output để phân tích; không coi
+hai bên cùng không đọc được là conversion pass.
 
-## 5. Model đang dùng và CPU/NPU làm gì?
+## 6. Lỗi và công cụ chi tiết
 
-| Bước | Model/xử lý | Thiết bị |
-| --- | --- | --- |
-| Tìm biển | YOLOv9-t ONNX | CPU |
-| Chuẩn bị vùng chữ | Crop, chỉnh phối cảnh, tách dòng, resize, pack patch | CPU |
-| Trích xuất đặc trưng | Encoder PARSeq, raw-patch MatMul INT8 | DX-M1 |
-| Đọc ra ký tự | Decoder PARSeq, giữ autoregression/refinement | PyTorch CPU |
-| Kết quả | Tracking, vẽ khung/chữ, ghi CSV; chuyển codec video | CPU |
-
-Launcher tự tìm full encoder có hash khớp mốc phần cứng trong
-`docs/evidence/dxm1_20261101.json`. Không tự lấy bản compile thử mới nhất. Nếu có
-nhiều bản phù hợp hoặc không tìm thấy artifact, truyền `--dx-run` kèm đường dẫn
-full run thực tế. Trên laptop đã xác minh có thể chỉ rõ:
-
-```bash
-.venv-linux/bin/python demo_alpr.py \
-  --dx-run artifacts/dxm1_full_encoder_mm_20261101_134233_21170
-```
-
-CLI backend vẫn kiểm tra checkpoint/ONNX/DXNN và runtime IO. Tham số `--device cpu`
-được launcher truyền cho **decoder**, encoder vẫn đi qua DX-M1.
-
-## 6. Nói gì trong lúc chờ xử lý?
-
-“Đây là ảnh/video toàn cảnh mới, em không khoanh sẵn biển hay nhập đáp án. YOLO tìm
-biển, CPU chuẩn bị vùng chữ, encoder PARSeq chạy DX-M1, decoder CPU đọc ra ký tự.
-Chạy xong mình xem khung/text và CSV của chính đầu vào này.”
-
-Khi được hỏi kết quả đã kiểm chứng: CPU và DX-M1 cùng đúng 5/5 ảnh có nhãn trong
-bộ development nhỏ; conversion fidelity khớp text PyTorch ở 6/6 demo crops. Đây
-không phải độ chính xác tổng quát. Chưa chốt FPS toàn pipeline và chưa tích hợp host
-Renesas. Với file mới đọc sai, giữ output để phân tích lỗi thay vì sửa đáp án trên ảnh.
-
-## 7. Lỗi thường gặp: xử lý nhanh
-
-| Hiện tượng | Cách làm |
+| Hiện tượng | Làm gì |
 | --- | --- |
-| Chưa nhận M1 | Chạy lại hai lệnh modprobe ở bước 1, rồi dxrt-cli -s; kiểm tra kernel |
-| Thiếu dx_engine/torch/cv2 | Dùng đúng .venv-linux/bin/python và hướng dẫn setup |
-| Không thấy encoder đã kiểm chứng | Giữ thư mục artifacts trên laptop, hoặc compile theo DXM1_DEPLOYMENT.md; chọn --dx-run |
-| File không tồn tại | Chọn lại bằng hộp chọn file, tránh gõ đường dẫn ví dụ |
-| Không có app MP4 | Cài VLC ở bước 1; launcher sẽ gọi VLC trực tiếp |
-| Trình duyệt không phát H.264 | Xem cùng file H264.mp4 bằng VLC |
-| Không phát hiện biển | Xem đúng phần clip đã xử lý, thử biển đủ lớn/rõ; đây là kết quả cần đánh giá, không coi là pass OCR |
-| Khung có nhưng chữ sai | Giữ ảnh, detections.csv và summary.json để phân biệt crop/tách dòng/OCR |
-| Pipeline STOP | Giữ log; không flash/reset firmware để thử sửa khi chưa xác định nguyên nhân |
+| Chưa nhận DX-M1 | `./alpr start`, xem kernel và dxrt-cli -s nếu driver không nạp được |
+| Input cache thiếu/đã đổi | Giữ file gốc; `./alpr clear` rồi thêm lại file nguyên vẹn, kiểm tra cache nếu hash báo khác |
+| Chưa có output để mở | Chạy `./alpr add` rồi `./alpr scan`; open chỉ nhớ lượt thành công của script này |
+| Video không mở trong browser | Dùng VLC hoặc mở thư mục bằng `./alpr open --folder` |
+| Quét không thấy biển | Kiểm tra phần đầu clip đã được xử lý hay dùng scan --all; xem kích thước/độ rõ của biển |
+| State bị hỏng | Giữ inputs/demo_inbox/state.json để kiểm tra, không tự ghi đè/reset |
+| Git bị chặn bởi file đang sửa | Giữ git status và thay đổi đó; không reset --hard/clean để chuẩn bị demo |
 
-Nếu git pull bị chặn do file đang sửa/untracked, giữ các file đó và xem git status;
-không dùng reset --hard/clean để chuẩn bị demo.
+Launcher chi tiết vẫn dùng được: `.venv-linux/bin/python demo_alpr.py` cho một
+nguồn trực tiếp không qua hàng đợi; có --source, --dx-run, --max-frames, --every-n-frames,
+--layout, --output và --no-open. Khác với menu nhanh, launcher chi tiết mặc định xử lý
+**toàn bộ** video. Menu tự chọn encoder theo hash mốc đã kiểm chứng như launcher;
+truyền --dx-run sau lệnh start/check/scan nếu cần chọn full run khác đã kiểm tra.
 
-## 8. Kiểm tra phần launcher
+Tests cho hàng đợi và launcher:
 
 ```bash
+.venv-linux/bin/python -m unittest discover -s tests -p test_alpr_console.py -v
 .venv-linux/bin/python -m unittest discover -s tests -p test_demo_flow.py -v
 ```
 
-Tests dùng inference giả, file mới thật trong thư mục tạm và FFmpeg thật cho
-conversion video. Không coi các tests này là phép chạy NPU. Luồng inference gốc
-`alpr_auto.py`/`alpr_auto_dxm1.py` không bị sửa; lần chạy bằng card ở laptop cần
-được kiểm tra thêm qua bước 1. Giữ nguyên toolchain Ruff/Pyink và unittest của repo;
-không đưa migration type checking toàn repo vào thay đổi flow demo.
+Tests dùng inference giả và file tạm, FFmpeg thật cho kiểm tra codec; chưa chạy menu
+mới trên card thật của laptop. Giữ pipeline/backend gốc và toolchain unittest,
+Ruff/Pyink hiện tại; không gộp migration type checking toàn repo vào tính năng này.
